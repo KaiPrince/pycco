@@ -47,6 +47,7 @@ from __future__ import absolute_import, print_function
 
 # Import our external dependencies.
 import argparse
+import glob
 import os
 import re
 import sys
@@ -723,8 +724,16 @@ def main():
     else:
         outdir = args.outdir
 
+    # Resolve glob patterns on windows.
+    if os.name == "nt" and args.sources:
+        sources = []
+        for i in args.sources:
+            sources += glob.glob(i)
+    else:
+        sources = args.sources
+
     process(
-        args.sources,
+        sources,
         outdir=outdir,
         preserve_paths=args.paths,
         md=args.markdown,
